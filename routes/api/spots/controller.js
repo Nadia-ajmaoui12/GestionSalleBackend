@@ -8,7 +8,6 @@ const {
 } = require('../../../utils/constants');
 const { responseBody } = require('../../../utils/commons');
 var _ = require('lodash');
-// const { map, forEach } = require('lodash');
 
 exports.createSpot = async (req, res, next) => {
   try {
@@ -64,36 +63,6 @@ exports.getAllSpots = async (req, res) => {
       .send(responseBody('Unable to retrieve data .', null, err));
   }
 };
-
-// exports.getAllSpotsByCompany = async (req, res) => {
-//     const companyId = req.auth.companyId;
-
-//     try {
-//         const allSpots = await Spot.find({
-//             deleted: false,
-//             companyId: companyId,
-//         })
-//             .select("-__v")
-//             .exec();
-
-//         if (!allSpots) {
-//             return res
-//                 .status(ERROR_STATUS_CODE)
-//                 .send(responseBody("spots Not found", null, []));
-//         }
-
-//         return res.status(SUCCESS_STATUS_CODE).send(
-//             responseBody(
-//                 "spots returned successfully !",
-//                 allSpots.map((item) => item.toJSON())
-//             )
-//         );
-//     } catch (err) {
-//         return res
-//             .status(ERROR_STATUS_CODE)
-//             .send(responseBody("Unable to retrieve data .", null, err));
-//     }
-// };
 
 exports.getSpotById = async (req, res) => {
   try {
@@ -181,6 +150,7 @@ exports.updateSpot = async (req, res, next) => {
 exports.getAvailableSpots = async (req, res) => {
   try {
     const userEnteredDate = req.params.bookingDate;
+    const spotType = req.params.spotType;
 
     const reservationDate = Moment(userEnteredDate, 'YYYY-MM-DD').format(
       'YYYY-MM-DD',
@@ -211,6 +181,7 @@ exports.getAvailableSpots = async (req, res) => {
       deleted: false,
       // isAvailable: true,
       _id: { $nin: reservedSpotIds },
+      type: spotType,
     }).select('ref description id');
 
     const result = availableSpots.map((availableSpot) => {

@@ -8,7 +8,8 @@
     "prod": "SET NODE_ENV=production&& nodemon ./bin/www",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.js\""
+    "format": "prettier --write \"**/*.js\"",
+    "test": "mocha Test/**/*.test.js"
   },
   "keywords": [],
   "author": "",
@@ -41,10 +42,13 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.1.1",
+    "mocha": "^10.2.0",
     "prettier": "^3.1.1"
   }
 }

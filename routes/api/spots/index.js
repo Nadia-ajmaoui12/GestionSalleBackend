@@ -5,7 +5,7 @@ const controller = require('./controller');
 route
   .post('/', controller.createSpot)
   .get('/', controller.getAllSpots)
-  .get('/availableSpots/:bookingDate', controller.getAvailableSpots)
+  .get('/availableSpots/:bookingDate/:spotType', controller.getAvailableSpots)
   .get('/:spotId', controller.getSpotById)
   .delete('/:spotId', controller.deleteSpot)
   .put('/:spotId', controller.updateSpot);

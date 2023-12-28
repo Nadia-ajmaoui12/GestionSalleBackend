@@ -42,6 +42,7 @@ exports.createReservation = async (req, res, next) => {
       .send(responseBody('Unable to save data.', null, err));
   }
 };
+
 exports.getAllReservations = async (req, res) => {
   try {
     const allReservations = await Reservation.find({ deleted: false })
@@ -75,73 +76,36 @@ exports.getAllReservations = async (req, res) => {
   }
 };
 
-// exports.getAllReservationsByCompany = async (req, res) => {
-//     const companyId = req.auth.companyId;
-
-//     try {
-//         const allReservations = await Reservation.find({
-//             deleted: false,
-//             companyId: companyId
-//         })
-//             .populate({
-//                 path: "spotId", select: "ref level eco type"
-//             })
-//             .populate({
-//                 path: "employeeId", select: "firstName lastName"
-//             })
-//             .select("status reservationDate timeSlot")
-//             .exec();
-
-//         if (!allReservations) {
-//             return res
-//                 .status(ERROR_STATUS_CODE)
-//                 .send(responseBody("reservations Not found", null, []));
-//         }
-
-//         return res.status(SUCCESS_STATUS_CODE).send(
-//             responseBody(
-//                 "reservations returned successfully !",
-//                 allReservations.map((item) => item.toJSON())
-//             )
-//         );
-//     } catch (err) {
-//         return res
-//             .status(ERROR_STATUS_CODE)
-//             .send(responseBody("Unable to retrieve data .", null, err));
-//     }
-// };
-
-exports.getHistory = async (req, res) => {
+exports.getReservationsForClient = async (req, res) => {
   try {
-    const authEmployeeId = req.auth.id;
-
+    const clientIdAuth = req.auth.id;
     const allReservations = await Reservation.find({
       deleted: false,
-      employeeId: authEmployeeId,
+      clientId: clientIdAuth,
     })
-      .sort({ reservationDate: 1 })
+      .select('-__v')
       .populate({
         path: 'spotId',
+        select: 'ref',
       })
-      .select('status reservationDate timeSlot spotId')
       .exec();
 
     if (!allReservations) {
       return res
         .status(ERROR_STATUS_CODE)
-        .send(responseBody('reservations Not found', null, []));
+        .send(responseBody('Reservations not found', null, []));
     }
 
     return res.status(SUCCESS_STATUS_CODE).send(
       responseBody(
-        'reservations returned successfully !',
+        'Reservations returned successfully!',
         allReservations.map((item) => item.toJSON()),
       ),
     );
   } catch (err) {
     return res
       .status(ERROR_STATUS_CODE)
-      .send(responseBody('Unable to retrieve data .', null, err));
+      .send(responseBody('Unable to retrieve data.', null, err));
   }
 };
 
@@ -202,7 +166,6 @@ exports.deleteReservation = async (req, res) => {
       .send(responseBody('unable to delete the reservation', null, err));
   }
 };
-
 exports.updateReservation = async (req, res, next) => {
   try {
     const { body: reqBody } = req;
@@ -302,62 +265,5 @@ exports.cancelReservationForClient = async (req, res, next) => {
     return res
       .status(ERROR_STATUS_CODE)
       .send(responseBody('Unknown error.', null, err));
-  }
-};
-
-exports.getUpcomingReservations = async (req, res) => {
-  const clientId = req.auth.id;
-  const currentDate = Moment();
-
-  try {
-    const reservationsList = await Reservation.find({
-      deleted: false,
-      clientId,
-      status: { $in: ['ACCEPTED', 'PENDING'] },
-      reservationDate: {
-        $gt: currentDate.format('YYYY-MM-DD'),
-      },
-    })
-      .select('clientId status reservationDate timeSlot spotId')
-      .populate({ path: 'spotId', select: 'ref type' })
-      .exec();
-
-    return res.status(SUCCESS_STATUS_CODE).send(
-      responseBody(
-        'Upcoming reservations returned successfully!',
-        reservationsList.map((item) => item.toJSON()),
-      ),
-    );
-  } catch (err) {
-    return res
-      .status(ERROR_STATUS_CODE)
-      .send(responseBody('Unable to retrieve data.', null, err));
-  }
-};
-
-exports.getReservation = async (req, res) => {
-  // const clientIdAuth = req.auth.id;
-  const currentDate = Moment();
-
-  try {
-    const reservation = await Reservation.find({
-      deleted: false,
-      // clientId: clientIdAuth,
-      reservationDate: currentDate.format('YYYY-MM-DD'),
-    })
-      .select('clientId status reservationDate timeSlot spotId')
-      .populate({ path: 'spotId', select: 'ref type' })
-      .exec();
-
-    return res.status(SUCCESS_STATUS_CODE).send(
-      responseBody(
-        'todays reservation returned successfully!',
-        reservation.map((item) => item.toJSON()),
-      ),
-    );
-  } catch (err) {
-    return res
-      .status(ERROR_STATUS_CODE)
-      .send(responseBody('Unable to retrieve data.', null, err));
   }
 };

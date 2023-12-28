@@ -6,14 +6,8 @@ const { isAuthenticated } = require('../../core/auth/auth.service');
 
 route
   .post('/', isAuthenticated(), controller.createReservation)
-  .get('/', isAuthenticated(), controller.getAllReservations)
-  .get('/todayReservation', isAuthenticated(), controller.getReservation)
-  .get(
-    '/upcomingReservations',
-    isAuthenticated(),
-    controller.getUpcomingReservations,
-  )
-  .get('/getHistory', isAuthenticated(), controller.getHistory)
+  .get('/', controller.getAllReservations)
+  .get('/client', isAuthenticated(), controller.getReservationsForClient)
   .get('/:reservationId', isAuthenticated(), controller.getReservationById)
   .delete('/:reservationId', isAuthenticated(), controller.deleteReservation)
   .put('/:reservationId', controller.updateReservation)

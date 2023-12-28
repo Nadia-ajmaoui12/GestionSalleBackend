@@ -1,0 +1,7 @@
+organization=nadia-ajmaoui12
+projectKey=Nadia-ajmaoui12_GestionSalleBackend
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.51767
+dashboardUrl=https://sonarcloud.io/dashboard?id=Nadia-ajmaoui12_GestionSalleBackend
+ceTaskId=AYyxvIyFQO5q2r2QWagg
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AYyxvIyFQO5q2r2QWagg
