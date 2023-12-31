@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 /* eslint-disable no-magic-numbers */
 module.exports = {
   env: {
@@ -36,14 +37,35 @@ module.exports = {
     'no-useless-escape': 'error', // Disallow unnecessary escape characters
     'no-useless-return': 'error', // Disallow unnecessary return statements
     'no-void': 'error', // Disallow the use of void operator
-    'no-warning-comments': [
-      'warn',
-      { terms: ['fixme', 'todo', 'xxx'], location: 'start' },
-    ], // Disallow specified warning terms in comments
     'no-with': 'error', // Disallow the use of the with statement
     'prefer-regex-literals': 'error', // Disallow unnecessary construction of RegExp objects
     'require-await': 'error', // Disallow async functions which have no await expression
     'vars-on-top': 'error', // Require var declarations to be placed at the top of their containing scope
     yoda: 'error', // Require or disallow Yoda conditions
+    camelcase: ['error', { properties: 'always' }],
+    'object-curly-spacing': ['error', 'always'], // Enforce consistent spacing inside braces
+    'semi-style': ['error', 'last'], // Require or disallow semicolons instead of ASI
+    'arrow-spacing': 'error', // Enforce consistent spacing before and after the arrow in arrow functions
+    'array-bracket-spacing': ['error', 'never'], // Enforce consistent spacing inside array brackets
+    'func-call-spacing': ['error', 'never'], // Require or disallow spacing between function identifiers and their invocations
+    'space-before-blocks': 'error', // Enforce consistent spacing before blocks
+    'space-in-parens': ['error', 'never'], // Enforce consistent spacing inside parentheses
+    'spaced-comment': ['error', 'always'], // Enforce consistent spacing after the // or /* in a comment
+    'eol-last': ['error', 'always'], // Require or disallow newline at the end of files
+    'no-dupe-keys': 'error', // Check for duplicate keys in object literals
+    'no-whitespace-before-property': 'error', // Disallow whitespace before properties
+    'no-trailing-spaces': 'error', // Disallow trailing spaces at the end of lines
+    'no-multi-spaces': 'error', // Disallow multiple spaces
+    'no-multiple-empty-lines': ['error', { max: 1 }], // Disallow multiple empty lines
+    'key-spacing': ['error', { beforeColon: false, afterColon: true }],
+    'keyword-spacing': ['error', { before: true, after: true }],
+    'no-lonely-if': 'error',
+    'no-nested-ternary': 'error',
+    'no-unneeded-ternary': 'error',
+    'prefer-arrow-callback': 'error',
+    'prefer-const': 'error',
+    'prefer-template': 'error',
+    'no-var': 'error',
+    'object-shorthand': 'error',
   },
 };

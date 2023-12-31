@@ -34,6 +34,7 @@ exports.signInUser = async (req, res) => {
         const token = auth.signToken(
           parsedUser.id,
           _.get(parsedUser, 'role', ''),
+          _.get(parsedUser, 'firstName', ''),
         );
 
         return res.status(SUCCESS_STATUS_CODE).json(
@@ -43,7 +44,6 @@ exports.signInUser = async (req, res) => {
             lastName: parsedUser.lastName,
             active: parsedUser.active,
             email: parsedUser.email,
-            avatar: parsedUser.avatar,
             accessToken: token,
           }),
         );

@@ -16,7 +16,7 @@ module.exports = (app) => {
     })
     .use(`${API_VERSION}/auth`, require('./core/auth/login'))
     .use(`${API_VERSION}/users`, require('./api/users'))
-    .use(`${API_VERSION}/spots`, require('./api/spots'))
+    .use(`${API_VERSION}/salles`, require('./api/salles'))
     .use(`${API_VERSION}/reservations`, require('./api/reservations'))
     .use(errorController);
 };

@@ -10,7 +10,7 @@ const reshapingOptions = {
   // exclure .__v
   versionKey: false,
   // exclure ._id
-  transform: function (doc, ret) {
+  transform(doc, ret) {
     delete ret._id;
     delete ret.deleted;
     delete ret.created;
@@ -23,7 +23,7 @@ const ReservationSchema = new Schema(
   {
     spotId: {
       type: Schema.Types.ObjectId,
-      ref: 'Spot',
+      ref: 'Salle',
     },
     clientId: {
       type: Schema.Types.ObjectId,

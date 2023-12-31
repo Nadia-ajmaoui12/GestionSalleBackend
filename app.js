@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-magic-numbers */
 const createError = require('http-errors');
 const express = require('express');
@@ -10,9 +11,7 @@ const fileUpload = require('express-fileupload');
 const envConfig = require('./config');
 const routes = require('./routes');
 
-// const errorController = require('./routes/core/errors.controller');
-
-require('./routes/core/auth/passport/index');
+// require('./routes/core/auth/passport/index');
 require('./routes/core/auth/passport/local');
 
 const app = express();
@@ -28,7 +27,6 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 // parse application/json
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
 app.use('/static', express.static(`${__dirname}/public`));
 
 app.use(

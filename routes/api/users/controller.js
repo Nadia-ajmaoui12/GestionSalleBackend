@@ -7,12 +7,9 @@ const {
 const { responseBody } = require('../../../utils/commons');
 const Reservation = require('../../../models/reservation');
 
-exports.createUser = async (req, res, next) => {
+exports.createUser = async (req, res) => {
   try {
     const { body: reqBody } = req;
-
-    console.log('USER', reqBody);
-
     const user = new User({
       email: reqBody.email,
       firstName: reqBody.firstName,
@@ -21,18 +18,18 @@ exports.createUser = async (req, res, next) => {
       role: reqBody.role,
     });
 
-    const savedUser = await user.save().catch((err) => next(err));
-    if (savedUser) {
-      return res
-        .status(SUCCESS_STATUS_CODE)
-        .send(responseBody('user created successfully !', savedUser.toJSON()));
-    }
+    const savedUser = await user.save();
+
+    return res
+      .status(SUCCESS_STATUS_CODE)
+      .send(responseBody('User created successfully!', savedUser.toJSON()));
   } catch (err) {
     return res
       .status(ERROR_STATUS_CODE)
-      .send(responseBody('Unable save data .', null, err));
+      .send(responseBody('Unable to save user data.', null, err));
   }
 };
+
 exports.getAllUsers = async (req, res) => {
   try {
     const allUsers = await User.find({
@@ -41,22 +38,22 @@ exports.getAllUsers = async (req, res) => {
       .select('-__v')
       .exec();
 
-    if (!allUsers) {
+    if (!allUsers || allUsers.length === 0) {
       return res
         .status(ERROR_STATUS_CODE)
-        .send(responseBody('users Not found', null, []));
+        .send(responseBody('Users not found', null, []));
     }
 
     return res.status(SUCCESS_STATUS_CODE).send(
       responseBody(
-        'users returned successfully !',
+        'Users returned successfully!',
         allUsers.map((item) => item.toJSON()),
       ),
     );
   } catch (err) {
     return res
       .status(ERROR_STATUS_CODE)
-      .send(responseBody('Unable to retrieve data .', null, err));
+      .send(responseBody('Unable to retrieve user data.', null, err));
   }
 };
 

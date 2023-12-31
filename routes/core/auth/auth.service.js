@@ -13,7 +13,6 @@ const validateJwt = eJwt({
 });
 
 function isAuthenticated() {
-  console.log('isAuthenticated');
   return (
     compose()
       // Validate jwt
@@ -71,9 +70,9 @@ function hasRole(roleRequired) {
 /**
  * Returns a jwt token signed by the app secret
  */
-function signToken(id, userRole) {
+function signToken(id, userRole, firstName) {
   // generate a signed son web token with the contents of user object and return it in the response
-  return jwt.sign({ id, role: userRole }, envConfig.SESSION_SECRET, {
+  return jwt.sign({ id, role: userRole, firstName }, envConfig.SESSION_SECRET, {
     expiresIn: '2 days',
   });
 }

@@ -24,7 +24,7 @@ exports.createReservation = async (req, res, next) => {
       reservationDate,
     });
 
-    const savedReservation = await reservation.save().catch((err) => next(err));
+    const savedReservation = await reservation.save();
 
     if (savedReservation) {
       return res
@@ -37,6 +37,7 @@ exports.createReservation = async (req, res, next) => {
         );
     }
   } catch (err) {
+    next(err); // Call next with the error directly
     return res
       .status(ERROR_STATUS_CODE)
       .send(responseBody('Unable to save data.', null, err));
@@ -118,14 +119,14 @@ exports.getReservationById = async (req, res) => {
     if (!reservationById) {
       return res
         .status(ERROR_STATUS_CODE)
-        .send(responseBody('Rservation Not found', null));
+        .send(responseBody('Reservation Not found', null));
     }
 
     return res
       .status(SUCCESS_STATUS_CODE)
       .send(
         responseBody(
-          'Rservation returned successfully !',
+          'Reservation returned successfully!',
           reservationById.toJSON(),
         ),
       );
@@ -156,7 +157,7 @@ exports.deleteReservation = async (req, res) => {
       .status(SUCCESS_STATUS_CODE)
       .send(
         responseBody(
-          'reservation deleted successfully !',
+          'Reservation deleted successfully !',
           deleteReservation.toJSON(),
         ),
       );
@@ -166,6 +167,31 @@ exports.deleteReservation = async (req, res) => {
       .send(responseBody('unable to delete the reservation', null, err));
   }
 };
+// exports.deleteAll = async (req, res) => {
+//   try {
+//     const deleteReservation = await Reservation.deleteMany();
+
+//     if (deleteReservation.deletedCount === 0) {
+//       return res
+//         .status(ERROR_STATUS_CODE)
+//         .send(responseBody('No reservations were deleted.', null));
+//     }
+
+//     return res
+//       .status(SUCCESS_STATUS_CODE)
+//       .send(
+//         responseBody(
+//           'All reservations deleted successfully!',
+//           deleteReservation.toJSON(),
+//         ),
+//       );
+//   } catch (err) {
+//     return res
+//       .status(ERROR_STATUS_CODE)
+//       .send(responseBody('Unable to delete reservations', null, err));
+//   }
+// };
+
 exports.updateReservation = async (req, res, next) => {
   try {
     const { body: reqBody } = req;
@@ -177,7 +203,7 @@ exports.updateReservation = async (req, res, next) => {
     if (!returnedReservation) {
       return res
         .status(ERROR_STATUS_CODE)
-        .send(responseBody('spot not found', null));
+        .send(responseBody('reservation not found', null));
     }
 
     returnedReservation.spotId = reqBody.spotId ?? returnedReservation.spotId;
@@ -251,6 +277,7 @@ exports.cancelReservationForClient = async (req, res, next) => {
     const updateReservation = await reservation
       .save()
       .catch((err) => next(err));
+
     if (updateReservation) {
       return res
         .status(SUCCESS_STATUS_CODE)

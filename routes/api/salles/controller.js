@@ -1,19 +1,19 @@
 /* eslint-env node */
 const Moment = require('moment');
-const Spot = require('../../../models/spot');
-const Reservation = require('../../../models/reservation');
+const Salle = require('../../../models/salle.js');
+const Reservation = require('../../../models/reservation.js');
 const {
   SUCCESS_STATUS_CODE,
   ERROR_STATUS_CODE,
-} = require('../../../utils/constants');
-const { responseBody } = require('../../../utils/commons');
-var _ = require('lodash');
+} = require('../../../utils/constants.js');
+const { responseBody } = require('../../../utils/commons.js');
+const _ = require('lodash');
 
-exports.createSpot = async (req, res, next) => {
+exports.createSalle = async (req, res, next) => {
   try {
     const { body: reqBody } = req;
 
-    const spot = new Spot({
+    const salle = new Salle({
       level: reqBody.level,
       ref: reqBody.ref,
       eco: reqBody.eco,
@@ -23,9 +23,9 @@ exports.createSpot = async (req, res, next) => {
       isAvailable: reqBody.isAvailable,
     });
 
-    const savedSpot = await spot.save().catch((err) => next(err));
+    const savedSalle = await salle.save().catch((err) => next(err));
 
-    if (savedSpot) {
+    if (savedSalle) {
       return res
         .status(SUCCESS_STATUS_CODE)
         .send(responseBody('Spot  saved successfully !'));
@@ -37,15 +37,15 @@ exports.createSpot = async (req, res, next) => {
   }
 };
 
-exports.getAllSpots = async (req, res) => {
+exports.getAllSalle = async (req, res) => {
   try {
-    const allSpots = await Spot.find({
+    const allSalle = await Salle.find({
       deleted: false,
     })
       .select('-__v')
       .exec();
 
-    if (!allSpots) {
+    if (!allSalle) {
       return res
         .status(ERROR_STATUS_CODE)
         .send(responseBody('spots Not found', null, []));
@@ -54,7 +54,7 @@ exports.getAllSpots = async (req, res) => {
     return res.status(SUCCESS_STATUS_CODE).send(
       responseBody(
         'spots returned successfully !',
-        allSpots.map((item) => item.toJSON()),
+        allSalle.map((item) => item.toJSON()),
       ),
     );
   } catch (err) {
@@ -64,13 +64,13 @@ exports.getAllSpots = async (req, res) => {
   }
 };
 
-exports.getSpotById = async (req, res) => {
+exports.getSalleById = async (req, res) => {
   try {
-    const { spotId } = req.params;
+    const { salleId } = req.params;
 
-    const spotById = await Spot.findById(spotId).exec();
+    const salleById = await Salle.findById(salleId).exec();
 
-    if (!spotById) {
+    if (!salleById) {
       return res
         .status(ERROR_STATUS_CODE)
         .send(responseBody('Spot Not found', null));
@@ -78,22 +78,23 @@ exports.getSpotById = async (req, res) => {
 
     return res
       .status(SUCCESS_STATUS_CODE)
-      .send(responseBody('Spot  returned successfully !', spotById.toJSON()));
+      .send(responseBody('Spot  returned successfully !', salleById.toJSON()));
   } catch (err) {
     return res
       .status(ERROR_STATUS_CODE)
       .send(responseBody('unable to retrieve data', null, err));
   }
 };
-exports.deleteSpot = async (req, res) => {
-  try {
-    const { spotId } = req.params;
 
-    const deleteSpot = await Spot.findByIdAndUpdate(spotId, {
+exports.deleteSalle = async (req, res) => {
+  try {
+    const { salleId } = req.params;
+
+    const deleteSalle = await Salle.findByIdAndUpdate(salleId, {
       deleted: true,
     }).exec();
 
-    if (!deleteSpot) {
+    if (!deleteSalle) {
       return res
         .status(ERROR_STATUS_CODE)
         .send(responseBody('Spot not found', null));
@@ -101,7 +102,7 @@ exports.deleteSpot = async (req, res) => {
 
     return res
       .status(SUCCESS_STATUS_CODE)
-      .send(responseBody('Spot deleted successfully!', deleteSpot.toJSON()));
+      .send(responseBody('Spot deleted successfully!', deleteSalle.toJSON()));
   } catch (err) {
     return res
       .status(ERROR_STATUS_CODE)
@@ -109,29 +110,31 @@ exports.deleteSpot = async (req, res) => {
   }
 };
 
-exports.updateSpot = async (req, res, next) => {
+exports.updateSalle = async (req, res, next) => {
   try {
     const { body: reqBody } = req;
-    const { spotId } = req.params;
+    const { salleId } = req.params;
 
-    const returnedSpot = await Spot.findById(spotId).exec();
+    const returnedSalle = await Salle.findById(salleId).exec();
 
-    if (!returnedSpot) {
+    if (!returnedSalle) {
       return res
         .status(ERROR_STATUS_CODE)
         .send(responseBody('spot not found', null));
     }
 
-    returnedSpot.level = reqBody.level ?? returnedSpot.level;
-    returnedSpot.ref = reqBody.ref ?? returnedSpot.ref;
-    returnedSpot.eco = reqBody.eco ?? returnedSpot.eco;
-    returnedSpot.description = reqBody.description ?? returnedSpot.description;
-    returnedSpot.type = reqBody.type ?? returnedSpot.type;
-    returnedSpot.isAvailable = reqBody.isAvailable ?? returnedSpot.isAvailable;
-    returnedSpot.personNumber =
-      reqBody.personNumber ?? returnedSpot.personNumber;
+    returnedSalle.level = reqBody.level ?? returnedSalle.level;
+    returnedSalle.ref = reqBody.ref ?? returnedSalle.ref;
+    returnedSalle.eco = reqBody.eco ?? returnedSalle.eco;
+    returnedSalle.description =
+      reqBody.description ?? returnedSalle.description;
+    returnedSalle.type = reqBody.type ?? returnedSalle.type;
+    returnedSalle.isAvailable =
+      reqBody.isAvailable ?? returnedSalle.isAvailable;
+    returnedSalle.personNumber =
+      reqBody.personNumber ?? returnedSalle.personNumber;
 
-    const updateSpot = await returnedSpot.save().catch((err) => next(err));
+    const updateSpot = await returnedSalle.save().catch((err) => next(err));
 
     if (updateSpot) {
       return res
@@ -147,10 +150,10 @@ exports.updateSpot = async (req, res, next) => {
   }
 };
 
-exports.getAvailableSpots = async (req, res) => {
+exports.getAvailableSalle = async (req, res) => {
   try {
     const userEnteredDate = req.params.bookingDate;
-    const spotType = req.params.spotType;
+    const salleType = req.params.salleType;
 
     const reservationDate = Moment(userEnteredDate, 'YYYY-MM-DD').format(
       'YYYY-MM-DD',
@@ -177,11 +180,11 @@ exports.getAvailableSpots = async (req, res) => {
 
     const reservedSpotIds = filteredList.map((item) => item.spotId);
 
-    const availableSpots = await Spot.find({
+    const availableSpots = await Salle.find({
       deleted: false,
       // isAvailable: true,
       _id: { $nin: reservedSpotIds },
-      type: spotType,
+      type: salleType,
     }).select('ref description id');
 
     const result = availableSpots.map((availableSpot) => {

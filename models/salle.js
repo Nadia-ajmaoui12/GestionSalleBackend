@@ -2,25 +2,19 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-env node */
 const mongoose = require('mongoose');
-const { SPOT_TYPES } = require('../utils/constants');
+const { SALLE_TYPES } = require('../utils/constants');
 
 const { Schema } = mongoose;
-const reshapingOptions = {
-  // include .id (it's a virtual)
+const FormatFunc = {
   virtuals: true,
-  // exclude .__v
   versionKey: false,
-  // exclude ._id
   transform(doc, ret) {
     delete ret._id;
-    delete ret.deleted;
-    delete ret.created;
-
     return ret;
   },
 };
 
-const SpotSchema = new Schema(
+const SalleSchema = new Schema(
   {
     level: {
       type: String,
@@ -30,13 +24,13 @@ const SpotSchema = new Schema(
       lowercase: true,
       validate: {
         async validator(ref) {
-          const spot = await this.constructor.findOne({
+          const salle = await this.constructor.findOne({
             ref,
             deleted: false,
           });
 
-          if (spot) {
-            if (this._id.equals(spot._id)) {
+          if (salle) {
+            if (this._id.equals(salle._id)) {
               return true;
             }
             return false;
@@ -45,7 +39,7 @@ const SpotSchema = new Schema(
         },
         message: () => 'The specified ref  is already in use.',
       },
-      required: [true, 'Spot ref required'],
+      required: [true, 'salle ref required'],
     },
     eco: {
       type: Boolean,
@@ -57,7 +51,7 @@ const SpotSchema = new Schema(
     },
     type: {
       type: String,
-      enum: SPOT_TYPES,
+      enum: SALLE_TYPES,
       required: true,
     },
     personNumber: {
@@ -80,7 +74,7 @@ const SpotSchema = new Schema(
       default: Date.now,
     },
   },
-  { toJSON: reshapingOptions },
+  { toJSON: FormatFunc },
 );
 
-module.exports = mongoose.model('Spot', SpotSchema);
+module.exports = mongoose.model('Salle', SalleSchema);
